@@ -1,0 +1,33 @@
+{
+  "name": "borrow-books",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "dev": "nodemon",
+    "start": "npm-run-all clean --parallel watch:build watch:server --print-label",
+    "watch:build": "tsc --watch",
+    "build": "nodemon exec",
+    "prod": "tsc && node dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vh4/borrow-books.git"
+  },
+  "author": "tony",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vh4/borrow-books/issues"
+  },
+  "homepage": "https://github.com/vh4/borrow-books#readme",
+  "dependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/express": "^5.0.0",
+    "@types/nodemon": "^1.19.6",
+    "axios": "^1.7.7",
+    "express": "^4.21.0",
+    "mongodb": "^6.9.0",
+    "nodemon": "^3.1.7",
+    "ts-node": "^10.9.2"
+  }
+}
