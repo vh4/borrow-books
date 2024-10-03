@@ -5,11 +5,11 @@ export const logger: Logger = pino({
     target: 'pino-pretty',
     options: {
       colorize: true,
-      translateTime: 'yyyy-mm-dd HH:MM:ss',  // Format waktu: y-m-d h:i:s
-      messageFormat: '[x_x] => {time} {msg}', // [logger-book] sebelum waktu dan pesan
+      translateTime: 'yyyy-mm-dd HH:MM:ss',
+      messageFormat: '[x_x] => {time} {msg}', 
     },
   },
   level: process.env.PINO_LOG_LEVEL || 'info',
 
-  redact: [], // Prevent sensitive data from being logged
+  redact: [],
 });

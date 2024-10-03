@@ -16,6 +16,7 @@ const BooksSchema = new mongoose.Schema<IBook>({
   code: {
     type: String,
     required: true,
+    unique: true 
   },
   title: {
     type: String,

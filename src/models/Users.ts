@@ -7,6 +7,7 @@ import { logger } from '../helpers/logger';
 interface IUser extends Document {
   name: string;
   code: string;
+  penaltyUntil: Date | null;
 }
 
 // Define User schema with typing.
@@ -18,7 +19,13 @@ const UserSchema = new mongoose.Schema<IUser>({
   code: {
     type: String,
     required: true,
+    unique: true
   },
+  penaltyUntil: { 
+    type: Date, 
+    default: null 
+  },
+
 });
 
 // Create a model from the schema with the correct typing.
