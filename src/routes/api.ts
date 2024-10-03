@@ -7,6 +7,42 @@ import express from 'express';
 
 const Router = express.Router();
 
+/**
+ * @swagger
+ * /api/healthy:
+ *   get:
+ *     summary: Health check endpoint
+ *     description: Returns the status of the API to verify that the service is running.
+ *     tags: [Health]
+ *     responses:
+ *       200:
+ *         description: API is healthy and running.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 response_code:
+ *                   type: string
+ *                   example: "00"
+ *                 message:
+ *                   type: string
+ *                   example: "Success"
+ *       500:
+ *         description: Server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 response_code:
+ *                   type: string
+ *                   example: "68"
+ *                 message:
+ *                   type: string
+ *                   example: "An error occurred"
+ */
+
 Router.get(`/healthy`, async (req: Request, res: Response): Promise<void> => {
   res.status(200).json({response_code: '00',message: 'Success'});
 });
@@ -92,6 +128,61 @@ Router.get(`/healthy`, async (req: Request, res: Response): Promise<void> => {
 
 Router.post('/borrow', BorrowController);
 
+/**
+ * @swagger
+ * /api/books:
+ *   get:
+ *     summary: Retrieve a list of available books
+ *     description: Retrieves all books that have stock greater than zero.
+ *     tags: [Books]
+ *     responses:
+ *       200:
+ *         description: A list of books with available stock.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 response_code:
+ *                   type: string
+ *                   example: '00'
+ *                 message:
+ *                   type: string
+ *                   example: 'Success'
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       code:
+ *                         type: string
+ *                         example: 'JK-45'
+ *                       title:
+ *                         type: string
+ *                         example: 'Harry Potter'
+ *                       author:
+ *                         type: string
+ *                         example: 'J.K Rowling'
+ *                       stock:
+ *                         type: integer
+ *                         example: 1
+ *       500:
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 response_code:
+ *                   type: string
+ *                   example: '68'
+ *                 message:
+ *                   type: string
+ *                   example: 'An error occurred while fetching books'
+ */
+
+
+Router.get('/books', CheckBookController);
 
 /**
  * @swagger
@@ -140,9 +231,84 @@ Router.post('/borrow', BorrowController);
  *                   type: string
  *                   example: "An error occurred while fetching members"
  */
-
-Router.post('/return', ReturnBorrowedController);
-Router.get('/books', CheckBookController);
 Router.get('/members', CheckMemberController);
+
+/**
+ * @swagger
+ * /api/return:
+ *   post:
+ *     summary: Return a borrowed book
+ *     description: Allows a member to return a borrowed book and applies penalties if the return is late.
+ *     tags: [Return]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               memberCode:
+ *                 type: string
+ *                 example: "M001"
+ *                 description: Code of the member returning the book.
+ *               bookCode:
+ *                 type: string
+ *                 example: "JK-45"
+ *                 description: Code of the book being returned.
+ *     responses:
+ *       200:
+ *         description: Successful return of the book.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 response_code:
+ *                   type: string
+ *                   example: "00"
+ *                 message:
+ *                   type: string
+ *                   example: "Book returned, Member is penalized until Thu Oct 05 2023!"
+ *       400:
+ *         description: Validation errors such as missing or incorrect data.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 response_code:
+ *                   type: string
+ *                   example: "03"
+ *                 message:
+ *                   type: string
+ *                   example: "No record of this book being borrowed by this member"
+ *       404:
+ *         description: Book or member not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 response_code:
+ *                   type: string
+ *                   example: "03"
+ *                 message:
+ *                   type: string
+ *                   example: "No record of this book being borrowed by this member"
+ *       500:
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 response_code:
+ *                   type: string
+ *                   example: "68"
+ *                 message:
+ *                   type: string
+ *                   example: "An error occurred while fetching books"
+ */
+Router.post('/return', ReturnBorrowedController);
 
 export default Router;
